@@ -3,11 +3,13 @@
 import sys
 import urllib.request as urllib
 import re
+import os
 
 search_level = 0
 url = ""
 file_format = ""
 files_to_download = []
+save_directory = ''
 
 def is_url(__str__):
     if re.match('https?://(?:www)?(?:[\w-]{2,255}(?:\.\w{2,6}){1,2})(?:/[\w&%?#-]{1,300})?',__str__):
@@ -15,7 +17,7 @@ def is_url(__str__):
     return False
 
 for x in range(0,len(sys.argv)):
-    if sys.argv[x-1] == '-l' or sys.argv[x-1] == '-f':
+    if sys.argv[x-1] == '-l' or sys.argv[x-1] == '-f' or sys.argv[x-1] == '-d':
         continue
     if sys.argv[x] == '-l':
         print ('search level  : ' , end = '')
@@ -29,6 +31,15 @@ for x in range(0,len(sys.argv)):
         print ("search format : " , end = '')
         print (sys.argv[x+1])
         file_format = sys.argv[x+1]
+    elif sys.argv[x] == '-d':
+        print ('saving into   : ' , end = '')
+        print (sys.argv[x+1])
+        save_directory = sys.argv[x+1]
+        if not os.path.exists(save_directory):
+            if input('directory does not exist create it (y/n)? : ') == 'y':
+                os.makedirs(save_directory)
+            else:
+                sys.exit(0)
 
 file_content = urllib.urlopen(url)
 file_content = file_content.read().decode('utf-8' , 'ignore')
@@ -47,7 +58,7 @@ a = 0
 for x in files_to_download:
     print("downloading : " , end = '')
     print(x)
-    print('\tas  : ' , end = '')
+    print('\t as : ' , end = '')
     print(str(a) + '.' + file_format + '\n')
-    urllib.urlretrieve(x , str(a) + '.' + file_format)
+    urllib.urlretrieve(x , save_directory + '/' + str(a) + '.' + file_format)
     a = a+1
