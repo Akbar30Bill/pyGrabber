@@ -2,6 +2,7 @@
 
 import sys
 import urllib.request as urllib
+from colorama import Fore, Back, Style
 import re
 import os
 
@@ -49,16 +50,16 @@ for x in file_content:
     if x.endswith(file_format):
         files_to_download.append(x)
 
-print('from:')
+print(Fore.BLUE + Back.CYAN + 'from:')
+print(Style.RESET_ALL)
 print(file_content)
-print('downloading:')
+print(Fore.RED + Back.CYAN + 'downloading:')
+print(Style.RESET_ALL)
 print(files_to_download)
 
-a = 0
 for x in files_to_download:
     print("downloading : " , end = '')
     print(x)
     print('\t as : ' , end = '')
-    print(str(a) + '.' + file_format + '\n')
-    urllib.urlretrieve(x , save_directory + '/' + str(a) + '.' + file_format)
-    a = a+1
+    print(x[x.rfind("/")+1:] + '\n')
+    urllib.urlretrieve(x , save_directory + '/' + x[x.rfind("/")+1:] )
