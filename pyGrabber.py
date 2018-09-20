@@ -1,11 +1,12 @@
 ### Web page Downloader ###
 
 import sys
-import urllib.request as urllib
+import urllib.request
 from colorama import Fore, Back, Style
 import re
 import os
 
+timeout_time = 2
 search_level = 0
 url = ""
 file_format = ""
@@ -50,21 +51,37 @@ for x in range(0,len(sys.argv)):
             else:
                 sys.exit(0)
 
-file_content = urllib.urlopen(url)
+file_content = urllib.request.urlopen(url , timeout=timeout_time)
 file_content = file_content.read().decode('utf-8' , 'ignore')
 file_content = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', file_content)
 
-def find_links_of( url ):
-    links = urllib.urlopen(url)
-    links = links.read().decode('utf-8' , 'ignore')
-    links = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', links)
-    return links
+def find_links_of( url , search_level):
+    for x in range(0,search_level):
+        print("\t" , end = "")
+    print(url)
+    try:
+        links = urllib.request.urlopen(url , timeout=timeout_time)
+        links = links.read().decode('utf-8' , 'ignore')
+        links = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', links)
+        return links
+    except urllib.error.URLError:
+        print(Fore.RED + "Passing the link because of URL is unreachable")
+        print(Style.RESET_ALL , end="")
+        pass
+    except:
+        print(Fore.RED + "The read operation timed out")
+        print(Style.RESET_ALL , end="")
+        pass
+
 
 append_file_content = []
+
 for x in range(0 , search_level):
     for y in range(0 , len(file_content)):
-        append_file_content.append(find_links_of(file_content[y]))
-    file_content.append(append_file_content)
+        append_file_content.append(find_links_of(file_content[y] , x))
+    file_content = file_content + append_file_content
+    append_file_content = []
+
 
 for x in file_content:
     if x.endswith(file_format):
@@ -77,4 +94,4 @@ for x in files_to_download:
     print(x)
     print('\t as : ' , end = '')
     print(x[x.rfind("/")+1:] + '\n')
-    # urllib.urlretrieve(x , save_directory + '/' + x[x.rfind("/")+1:] )
+    # urllib.request.urlretrieve(x , save_directory + '/' + x[x.rfind("/")+1:] )
