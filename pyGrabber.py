@@ -68,7 +68,7 @@ for x in range(0,len(sys.argv)):
         print (sys.argv[x+1])
         file_format = sys.argv[x+1]
         if not file_format.startswith('.'):
-            file_format = '.' + file_formats
+            file_format = '.' + file_format
     elif sys.argv[x] == '-d':
         print ('saving into   : ' , end = '')
         print (sys.argv[x+1])
