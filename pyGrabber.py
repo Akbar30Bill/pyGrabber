@@ -13,6 +13,32 @@ file_format = ""
 files_to_download = []
 save_directory = ''
 
+def find_links_of( url , search_level):
+    for x in range(0,search_level):
+        print("\t" , end = "")
+    print(url)
+    try:
+        links = urllib.request.urlopen(url , timeout=timeout_time)
+        links = links.read().decode('utf-8' , 'ignore')
+        links = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', links)
+        return links
+    except urllib.error.URLError:
+        for x in range(0,search_level):
+            print("\t" , end = "")
+        print(Fore.RED + "Passing the link because of URL is unreachable")
+        print(Style.RESET_ALL , end="")
+        return []
+    except KeyboardInterrupt:
+        if input('\nAre you sure you want to quit (y/n)? : ') == 'y':
+            sys.exit(0)
+        print("Continue:")
+    except:
+        for x in range(0,search_level):
+            print("\t" , end = "")
+        print(Fore.RED + "The read operation timed out")
+        print(Style.RESET_ALL , end="")
+        return []
+
 def is_url(__str__):
     if re.match('https?://(?:www)?(?:[\w-]{2,255}(?:\.\w{2,6}){1,2})(?:/[\w&%?#-]{1,300})?',__str__):
         return True
@@ -51,41 +77,25 @@ for x in range(0,len(sys.argv)):
             else:
                 sys.exit(0)
 
-file_content = urllib.request.urlopen(url , timeout=timeout_time)
-file_content = file_content.read().decode('utf-8' , 'ignore')
-file_content = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', file_content)
+# file_content = urllib.request.urlopen(url , timeout=timeout_time)
+# file_content = file_content.read().decode('utf-8' , 'ignore')
+# file_content = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', file_content)
 
-def find_links_of( url , search_level):
-    for x in range(0,search_level):
-        print("\t" , end = "")
-    print(url)
-    try:
-        links = urllib.request.urlopen(url , timeout=timeout_time)
-        links = links.read().decode('utf-8' , 'ignore')
-        links = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', links)
-        return links
-    except urllib.error.URLError:
-        print(Fore.RED + "Passing the link because of URL is unreachable")
-        print(Style.RESET_ALL , end="")
-        pass
-    except KeyboardInterrupt:
-        if input('\nAre you sure you want to quit (y/n)? : ') == 'y':
-            sys.exit(0)
-        print("Continue:")
-    except:
-        print(Fore.RED + "The read operation timed out")
-        print(Style.RESET_ALL , end="")
-        pass
-
+file_content = [url]
 
 append_file_content = []
 
 for x in range(0 , search_level):
     for y in range(0 , len(file_content)):
-        new_links = find_links_of(file_content[y] , x)
-        if new_links not in file_content and new_links not in append_file_content:
-            append_file_content = append_file_content + new_links
-        # append_file_content.append(find_links_of(file_content[y] , x))
+        try:
+            new_links = find_links_of(file_content[y] , x)
+            if new_links not in file_content and new_links not in append_file_content:
+                append_file_content = append_file_content + new_links
+            # append_file_content.append(find_links_of(file_content[y] , x))
+        except TypeError:
+            print(Fore.RED + "TypeError")
+            print(Style.RESET_ALL , end="")
+            pass
     file_content = append_file_content
     append_file_content = []
 
@@ -100,9 +110,9 @@ for x in file_content:
 
 downloading(file_content , files_to_download)
 
-# for x in files_to_download:
-    # print("downloading : " , end = '')
-    # print(x)
-    # print('\t as : ' , end = '')
-    # print(x[x.rfind("/")+1:] + '\n')
-    # urllib.request.urlretrieve(x , save_directory + '/' + x[x.rfind("/")+1:] )
+for x in files_to_download:
+    print("downloading : " , end = '')
+    print(x)
+    print('\t as : ' , end = '')
+    print(x[x.rfind("/")+1:] + '\n')
+    urllib.request.urlretrieve(x , save_directory + '/' + x[x.rfind("/")+1:] )
