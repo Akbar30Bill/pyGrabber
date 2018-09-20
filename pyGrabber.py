@@ -82,7 +82,7 @@ append_file_content = []
 
 for x in range(0 , search_level):
     for y in range(0 , len(file_content)):
-        new_links = file_content(file_content[y] , x)
+        new_links = find_links_of(file_content[y] , x)
         if new_links not in file_content and new_links not in append_file_content:
             append_file_content = append_file_content + new_links
         # append_file_content.append(find_links_of(file_content[y] , x))
