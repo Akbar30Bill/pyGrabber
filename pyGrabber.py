@@ -17,6 +17,14 @@ def is_url(__str__):
         return True
     return False
 
+def downloading(all , reqs):
+    print(Fore.BLUE + Back.CYAN + 'from:')
+    print(Style.RESET_ALL)
+    print(all)
+    print(Fore.RED + Back.CYAN + 'downloading:')
+    print(Style.RESET_ALL)
+    print(reqs)
+
 for x in range(0,len(sys.argv)):
     if sys.argv[x-1] == '-l' or sys.argv[x-1] == '-f' or sys.argv[x-1] == '-d':
         continue
@@ -46,20 +54,27 @@ file_content = urllib.urlopen(url)
 file_content = file_content.read().decode('utf-8' , 'ignore')
 file_content = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', file_content)
 
+def find_links_of( url ):
+    links = urllib.urlopen(url)
+    links = file_content.read().decode('utf-8' , 'ignore')
+    links = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', file_content)
+    return links
+
+append_file_content = []
+for x in range(0 , search_level):
+    for y in range(0 , len(file_content)):
+        append_file_content.append(find_links_of(file_content[y]))
+    file_content.append(append_file_content)
+
 for x in file_content:
     if x.endswith(file_format):
         files_to_download.append(x)
 
-print(Fore.BLUE + Back.CYAN + 'from:')
-print(Style.RESET_ALL)
-print(file_content)
-print(Fore.RED + Back.CYAN + 'downloading:')
-print(Style.RESET_ALL)
-print(files_to_download)
+downloading(file_content , files_to_download)
 
 for x in files_to_download:
     print("downloading : " , end = '')
     print(x)
     print('\t as : ' , end = '')
     print(x[x.rfind("/")+1:] + '\n')
-    urllib.urlretrieve(x , save_directory + '/' + x[x.rfind("/")+1:] )
+    # urllib.urlretrieve(x , save_directory + '/' + x[x.rfind("/")+1:] )
