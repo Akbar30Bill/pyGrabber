@@ -13,6 +13,7 @@ file_format = ""
 files_to_download = []
 save_directory = ''
 
+
 def find_links_of( url , search_level):
     for x in range(0,search_level):
         print("\t" , end = "")
