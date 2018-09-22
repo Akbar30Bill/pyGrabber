@@ -32,13 +32,14 @@ def find_links_of( url , search_level):
     except KeyboardInterrupt:
         if input('\nAre you sure you want to quit (y/n)? : ') == 'y':
             sys.exit(0)
-            print(Style.RESET_ALL , end="")
+
         print("Continue:")
         return []
     except:
         for x in range(0,search_level):
             print("\t" , end = "")
         print(Fore.RED + "The read operation timed out")
+        print(Style.RESET_ALL , end="")
         return []
 
 def is_url(__str__):
@@ -46,7 +47,7 @@ def is_url(__str__):
         return True
     return False
 
-def downloading(all , reqs , save_dir):
+def downloading(all , reqs , save_dir ):# timeout_time):
     if len(all) == 0 or len(reqs) == 0:
         print('nothing found')
         sys.exit(0)
@@ -65,7 +66,7 @@ def downloading(all , reqs , save_dir):
             print('\t as : ' , end = '')
             print(x[x.rfind("/")+1:] + '\n')
             try:
-                urllib.request.urlretrieve(x , save_dir + '/' + x[x.rfind("/")+1:] , timeout=timeout_time)
+                urllib.request.urlretrieve(x , save_dir + '/' + x[x.rfind("/")+1:] )#, timeout=timeout_time)
             except:
                 print(Fore.RED + 'Download Failed')
                 print(Style.RESET_ALL)
@@ -76,7 +77,7 @@ def help():
     print("\toptions:")
     print("\t\t-f format\tsearch the pages for files with this format")
     print("\t\t-d directory\tsaves the downloade files into this directory")
-    print("\t\t-l level\tint number to define deepness of search default is 0")
+    print("\t\t-l level\tint number to define deapth of search default is 0")
 
 for x in range(0,len(sys.argv)):
     if "-h" in sys.argv or "--help" in sys.argv:
@@ -84,6 +85,7 @@ for x in range(0,len(sys.argv)):
         sys.exit(0)
     if "-f" not in sys.argv or not is_url(sys.argv[1]):
         print("Bad input")
+        sys.exit(0)
     if sys.argv[x-1] == '-l' or sys.argv[x-1] == '-f' or sys.argv[x-1] == '-d':
         continue
     if sys.argv[x] == '-l':
@@ -141,7 +143,7 @@ for x in file_content:
         print(x)
         pass
 
-downloading(file_content , files_to_download , save_directory)
+downloading(file_content , files_to_download , save_directory)# , timeout_time)
 
 # print("total of " end = '')
 # print(len(files_to_download) , end = " ")
