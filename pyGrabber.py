@@ -27,7 +27,7 @@ def no_repeted_alowed(list):
 #added def
 
 def get_sutable_links(the_set , format):
-    sutable = {}
+    sutable = set()
     for x in the_set:
         if is_sutable_for_download(x , format):
             sutable.add(x)
@@ -151,7 +151,7 @@ for x in range(0 , search_level):
 
     file_content = append_file_content
     # z = z + len(append_file_content)
-    append_file_content = {}
+    append_file_content = set()
 
 
 # for x in file_content:
