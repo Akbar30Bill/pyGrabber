@@ -49,18 +49,18 @@ def find_links_of( url , search_level ):
             print("\t" , end = "")
         print(Fore.RED + "Passing the link because of URL is unreachable")
         print(Style.RESET_ALL , end="")
-        return []
+        return set()
     except KeyboardInterrupt:
         if input('\nAre you sure you want to quit (y/n)? : ') == 'y':
             sys.exit(0)
         print("Continue:")
-        return []
+        return set()
     except:
         for x in range(0,search_level):
             print("\t" , end = "")
         print(Fore.RED + "The read operation timed out")
         print(Style.RESET_ALL , end="")
-        return []
+        return set()
 
 def is_url(__str__):
     if re.match('https?://(?:www)?(?:[\w-]{2,255}(?:\.\w{2,6}){1,2})(?:/[\w&%?#-]{1,300})?',__str__):
