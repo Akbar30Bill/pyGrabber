@@ -41,7 +41,7 @@ def find_links_of( url , search_level ):
         links = urllib.request.urlopen(url , timeout=timeout_time)
         links = links.read().decode('utf-8' , 'ignore')
         links = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', links)
-        links = set(new_links)
+        links = set(links)
         # links = no_repeted_alowed(links)#added line
         return links
     except urllib.error.URLError:
