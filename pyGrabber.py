@@ -134,10 +134,12 @@ for x in range(0,len(sys.argv)):
 
 file_content = {url}
 append_file_content = set()
+all_of_links = set()
 
 
 # added a z strategy to save lower level file scan strategy
 for x in range(0 , search_level):
+    all_of_links = all_of_links.union(file_content)
     files_to_download = files_to_download.union(get_sutable_links(file_content , file_format))
     for y in file_content:
         new_links = find_links_of(y , x)
@@ -148,7 +150,7 @@ for x in range(0 , search_level):
 
     # file_content = no_repeted_alowed(file_content)
     # file_content = file_content + append_file_content
-
+    append_file_content.discard(all_of_links)
     file_content = append_file_content
     # z = z + len(append_file_content)
     append_file_content = set()
