@@ -26,7 +26,7 @@ def no_repeted_alowed(list):
     return new_list
 #added def
 
-def find_links_of( url , search_level):
+def find_links_of( url , search_level ):
     for x in range(0,search_level):
         print("\t" , end = "")
     print(url)
@@ -34,7 +34,7 @@ def find_links_of( url , search_level):
         links = urllib.request.urlopen(url , timeout=timeout_time)
         links = links.read().decode('utf-8' , 'ignore')
         links = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', links)
-        links = no_repeted_alowed(new_links)#added line
+        links = no_repeted_alowed(links)#added line
         return links
     except urllib.error.URLError:
         for x in range(0,search_level):
