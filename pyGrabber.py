@@ -137,6 +137,7 @@ for x in range(0 , search_level):
         append_file_content = append_file_content + new_links
         append_file_content = no_repeted_alowed(append_file_content) #added line
 
+    file_content = no_repeted_alowed(file_content)
     file_content = file_content + append_file_content
     z = z + len(append_file_content)
     append_file_content = []
@@ -147,7 +148,7 @@ for x in file_content:
         if is_sutable_for_download(x , file_format):
             files_to_download.append(x)
     except AttributeError:
-        print(x)
+        print(f'AttributeError in {x}')
         pass
 
 downloading(file_content , files_to_download , save_directory)# , timeout_time)
