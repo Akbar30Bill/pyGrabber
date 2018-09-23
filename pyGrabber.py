@@ -13,6 +13,18 @@ file_format = ""
 files_to_download = []
 save_directory = ''
 
+def is_sutable_for_download(file , format):
+    if file.endswith(format):
+        return True
+    return False
+
+def no_repeted_alowed(list):
+    new_list = []
+    for x in list:
+        if x not in new_list:
+            new_list.append(x)
+    return new_list
+#added def
 
 def find_links_of( url , search_level):
     for x in range(0,search_level):
@@ -22,6 +34,7 @@ def find_links_of( url , search_level):
         links = urllib.request.urlopen(url , timeout=timeout_time)
         links = links.read().decode('utf-8' , 'ignore')
         links = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', links)
+        links = no_repeted_alowed(new_links)#added line
         return links
     except urllib.error.URLError:
         for x in range(0,search_level):
@@ -32,7 +45,6 @@ def find_links_of( url , search_level):
     except KeyboardInterrupt:
         if input('\nAre you sure you want to quit (y/n)? : ') == 'y':
             sys.exit(0)
-
         print("Continue:")
         return []
     except:
@@ -112,46 +124,30 @@ for x in range(0,len(sys.argv)):
             else:
                 sys.exit(0)
 
-# file_content = urllib.request.urlopen(url , timeout=timeout_time)
-# file_content = file_content.read().decode('utf-8' , 'ignore')
-# file_content = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', file_content)
-
 file_content = [url]
 append_file_content = []
 
+
+# added a z strategy to save lower level file scan strategy
 for x in range(0 , search_level):
-    for y in range(0 , len(file_content)):
-        try:
-            new_links = find_links_of(file_content[y] , x)
-            if new_links not in file_content and new_links not in append_file_content:
-                append_file_content = append_file_content + new_links
-            # append_file_content.append(find_links_of(file_content[y] , x))
-        except TypeError:
-            print(Fore.RED + "TypeError")
-            print(Style.RESET_ALL , end="")
-            pass
-    file_content = append_file_content
-    # or file_content = file_content = append_file_content + file_content it includes lower levels but scans lower levels many times
+    z = 0
+    for y in range(z , len(file_content)):
+        new_links = find_links_of(file_content[y] , x)
+        # if new_links not in file_content and new_links not in append_file_content: #deleted line
+        append_file_content = append_file_content + new_links
+        append_file_content = no_repeted_alowed(append_file_content) #added line
+
+    file_content = file_content + append_file_content
+    z = z + len(append_file_content)
     append_file_content = []
 
 
 for x in file_content:
     try:
-        if x.endswith(file_format):
+        if is_sutable_for_download(x , file_format):
             files_to_download.append(x)
     except AttributeError:
         print(x)
         pass
 
 downloading(file_content , files_to_download , save_directory)# , timeout_time)
-
-# print("total of " end = '')
-# print(len(files_to_download) , end = " ")
-# print("files will be downloaded start download (y/n) ?")
-#
-# for x in files_to_download:
-#     print("downloading : " , end = '')
-#     print(x)
-#     print('\t as : ' , end = '')
-#     print(x[x.rfind("/")+1:] + '\n')
-#     urllib.request.urlretrieve(x , save_directory + '/' + x[x.rfind("/")+1:] )
