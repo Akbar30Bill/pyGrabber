@@ -10,8 +10,8 @@ timeout_time = 2
 search_level = 0
 url = ""
 file_format = ""
-files_to_download = []
-save_directory = ''
+files_to_download = set()
+save_directory = 'pyGrabber'
 
 def is_sutable_for_download(file , format):
     if file.endswith(format):
@@ -26,6 +26,13 @@ def no_repeted_alowed(list):
     return new_list
 #added def
 
+def get_sutable_links(the_set , format):
+    sutable = {}
+    for x in the_set:
+        if is_sutable_for_download(x , format):
+            sutable.add(x)
+    return sutable
+
 def find_links_of( url , search_level ):
     for x in range(0,search_level):
         print("\t" , end = "")
@@ -34,7 +41,8 @@ def find_links_of( url , search_level ):
         links = urllib.request.urlopen(url , timeout=timeout_time)
         links = links.read().decode('utf-8' , 'ignore')
         links = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', links)
-        links = no_repeted_alowed(links)#added line
+        links = set(new_links)
+        # links = no_repeted_alowed(links)#added line
         return links
     except urllib.error.URLError:
         for x in range(0,search_level):
@@ -124,31 +132,34 @@ for x in range(0,len(sys.argv)):
             else:
                 sys.exit(0)
 
-file_content = [url]
-append_file_content = []
+file_content = {url}
+append_file_content = set()
 
 
 # added a z strategy to save lower level file scan strategy
 for x in range(0 , search_level):
-    z = 0
-    for y in range(z , len(file_content)):
-        new_links = find_links_of(file_content[y] , x)
+    files_to_download = files_to_download.union(get_sutable_links(file_content , file_format))
+    for y in file_content:
+        new_links = find_links_of(y , x)
         # if new_links not in file_content and new_links not in append_file_content: #deleted line
-        append_file_content = append_file_content + new_links
-        append_file_content = no_repeted_alowed(append_file_content) #added line
+        # append_file_content = append_file_content + new_links
+        append_file_content = append_file_content.union(new_links)
+        # append_file_content = no_repeted_alowed(append_file_content) #added line
 
-    file_content = no_repeted_alowed(file_content)
-    file_content = file_content + append_file_content
-    z = z + len(append_file_content)
-    append_file_content = []
+    # file_content = no_repeted_alowed(file_content)
+    # file_content = file_content + append_file_content
+
+    file_content = append_file_content
+    # z = z + len(append_file_content)
+    append_file_content = {}
 
 
-for x in file_content:
-    try:
-        if is_sutable_for_download(x , file_format):
-            files_to_download.append(x)
-    except AttributeError:
-        print(f'AttributeError in {x}')
-        pass
+# for x in file_content:
+#     try:
+#         if is_sutable_for_download(x , file_format):
+#             files_to_download.append(x)
+#     except AttributeError:
+#         print(f'AttributeError in {x}')
+#         pass
 
 downloading(file_content , files_to_download , save_directory)# , timeout_time)
