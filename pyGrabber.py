@@ -7,7 +7,7 @@ import re
 import os
 
 timeout_time = 2
-search_level = 0
+search_level = 1
 url = ""
 file_format = ""
 files_to_download = set()
