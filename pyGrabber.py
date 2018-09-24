@@ -93,7 +93,7 @@ def downloading(all , reqs , save_dir ):# timeout_time):
 
 def help():
     print("grabbs files from a specified web page with specified format")
-    print("usage: pyGrabber <website_url> <-f file_format> [-d save directory] [-l search level]")
+    print("usage: pyGrabber <website_url> <-f file_format> [-h] [-d save directory] [-l search level]")
     print("\toptions:")
     print("\t\t-f format\tsearch the pages for files with this format")
     print("\t\t-d directory\tsaves the downloade files into this directory")
