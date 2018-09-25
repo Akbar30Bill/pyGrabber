@@ -24,7 +24,6 @@ def no_repeted_alowed(list):
         if x not in new_list:
             new_list.append(x)
     return new_list
-#added def
 
 def get_sutable_links(the_set , format):
     sutable = set()
@@ -42,7 +41,6 @@ def find_links_of( url , search_level ):
         links = links.read().decode('utf-8' , 'ignore')
         links = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', links)
         links = set(links)
-        # links = no_repeted_alowed(links)#added line
         return links
     except urllib.error.URLError:
         for x in range(0,search_level):
@@ -136,32 +134,15 @@ file_content = {url}
 append_file_content = set()
 all_of_links = set()
 
-
-# added a z strategy to save lower level file scan strategy
 for x in range(0 , search_level):
     all_of_links = all_of_links.union(file_content)
     files_to_download = files_to_download.union(get_sutable_links(file_content , file_format))
     for y in file_content:
         new_links = find_links_of(y , x)
-        # if new_links not in file_content and new_links not in append_file_content: #deleted line
-        # append_file_content = append_file_content + new_links
         append_file_content = append_file_content.union(new_links)
-        # append_file_content = no_repeted_alowed(append_file_content) #added line
 
-    # file_content = no_repeted_alowed(file_content)
-    # file_content = file_content + append_file_content
     append_file_content.discard(all_of_links)
     file_content = append_file_content
-    # z = z + len(append_file_content)
     append_file_content = set()
-
-
-# for x in file_content:
-#     try:
-#         if is_sutable_for_download(x , file_format):
-#             files_to_download.append(x)
-#     except AttributeError:
-#         print(f'AttributeError in {x}')
-#         pass
 
 downloading(file_content , files_to_download , save_directory)# , timeout_time)
