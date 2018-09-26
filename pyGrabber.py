@@ -6,6 +6,8 @@ from colorama import Fore, Back, Style
 import re
 import os
 
+#we could have use bs4 but thene it was dependensy and u know what depency is bad i will delete colorma lyta
+
 timeout_time = 2
 search_level = 1
 url = ""
