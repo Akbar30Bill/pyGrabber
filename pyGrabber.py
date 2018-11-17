@@ -6,6 +6,7 @@ import urllib.error
 import re
 import os
 import argparse
+import update.py
 # TODO: adding concurrent.futures to do threadingpool and downloading sim
 
 timeout_time = 2
@@ -165,7 +166,4 @@ if __name__ == '__main__':
         append_file_content.discard(all_of_links)
         file_content = append_file_content
         append_file_content = set()
-
-# downloading(file_content , files_to_download , save_directory)
-    # partial_download(url="http://ipv4.download.thinkbroadband.com/5MB.zip")
-# print(handle_arguments())
+        
