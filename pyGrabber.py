@@ -6,7 +6,7 @@ import urllib.error
 import re
 import os
 import argparse
-import update.py
+# import update.py
 # TODO: adding concurrent.futures to do threadingpool and downloading sim
 
 timeout_time = 2
@@ -24,7 +24,8 @@ def is_sutable_for_download(file, format):
 
 
 def get_sutable_links(the_set, format):
-    return set(filter(lambda x: is_sutable_for_download(x), the_set))
+    # return set(filter(lambda x,y: is_sutable_for_download(x), the_set ))
+    return set(filter(lambda x:(lambda y:is_sutable_for_download(x,y) , format) , the_set ))
 
 
 def find_links_of(url, search_level):
